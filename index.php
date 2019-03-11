@@ -87,9 +87,17 @@ if(!isset($_SESSION['products_names_list'])){
 			$tpl = 'user';
 			break;
 		case 'dish':
+			$id = reset($_GET);
+			$dish_info=get_dish_info($db, $id);
+			$title = $dish_info[0]['title'];
 			$tpl = 'dish';
 			break;
 		case 'dishes':
+			if (isset($_GET['category'])) {$params['category']=$_GET['category'];}
+			if (isset($_GET['kitchen'])) {$params['kitchen']=$_GET['kitchen'];}
+			$dishes=get_all_dishes($db, $params);
+			// $dish_info=get_dish_info($db, $id);
+			$title = 'Категорія';
 			$tpl = 'dishes';
 			break;
 		case 'order': 
@@ -119,8 +127,7 @@ if(!isset($_SESSION['products_names_list'])){
                         break;  
                     default:
                         $tpl = 'cart';
-                        //відобразити сторінку кошика
-                        
+                        //відобразити сторінку кошика       
                 }
 			break;
 

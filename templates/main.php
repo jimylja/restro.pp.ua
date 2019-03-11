@@ -15,17 +15,17 @@
                   <div class="product">
                     <div class="flip-container">
                       <div class="flipper">
-                        <div class="front"><a href="detail.html"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a></div>
-                        <div class="back"><a href="detail.html"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a></div>
+                        <div class="front"><a href="dish/?id=<?php echo ($property['id']);?>"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a></div>
+                        <div class="back"><a href="dish/?id=<?php echo ($property['id']);?>"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a></div>
                       </div>
-                    </div><a href="detail.html" class="invisible"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a>
+                    </div><a href="dish/?id=<?php echo ($property['id']);?>" class="invisible"><img src="../public/img/<?php echo($property['image']); ?>" alt="" class="img-fluid"></a>
                     <div class="text">
-                      <h3><a href="detail.html"><?php echo($property['title']);?></a></h3>
+                      <h3><a href="dish/?id=<?php echo ($property['id']);?>"><?php echo($property['title']);?></a></h3>
                       <p class="price"> 
                         <del></del><?php echo(fixPrice($property['price']));?> грн.
                       </p>
                       <p class="buttons">
-                        <a href="detail.html" class="btn btn-outline-secondary">View detail</a>
+                        <a href="dish/?id=<?php echo ($property['id']);?>" class="btn btn-outline-secondary">View detail</a>
                         <a href="<?php if (count($this_id)!=0 && $this_id != 0){ echo ('cart/?add='.$property['id']); } ?>" class="btn btn-primary">
                             <i class="fa fa-shopping-cart"></i>Add to cart</a>
                       </p>

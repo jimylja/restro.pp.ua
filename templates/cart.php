@@ -3,7 +3,7 @@
                 <form method="post" action="checkout1.html">
                 <input type="hidden" name="action" value="add"> 
                   <h1>Shopping cart</h1>
-                  <p class="text-muted">You currently have 3 item(s) in your cart.</p>
+                  <p class="text-muted">You currently have <span id='cartCount'><?php echo get_cart_count();?></span> item(s) in your cart.</p>
                   <div class="table-responsive">
                     <table class="table">
                       <thead>
@@ -18,13 +18,15 @@
                       <tbody>
                       
       <?php  if (isset($_COOKIE['cart']) && !empty($_COOKIE['cart'])){
-          $cart_from_cookie=unserialize($_COOKIE['cart']);	
+          // $cart_from_cookie=unserialize($_COOKIE['cart']);
+          $cart_from_cookie= json_decode($_COOKIE['cart'],true);
           $cart_items=getCart($db); 
 		      $sum=0; ?>
-        <?php foreach ($cart_items as $item => $property) { ?>
+        <?php foreach ($cart_items as $item => $property) { 
+          ?>
           <tr>
-           <td><a href="#"><img src="../public/img/<?php echo($property['image'])?>" alt="dish_cover"></a></td>
-           <td><a href="#"><?php echo ($property['title']);?></a></td>
+           <td><a href="dish/?id=<?php echo ($property['ID']);?>"><img src="../public/img/<?php echo($property['image'])?>" alt="dish_cover"></a></td>
+           <td><a href="dish/?id=<?php echo ($property['ID']);?>"><?php echo ($property['title']);?></a></td>
            <td>
             <input type="number" value="<?php echo ($cart_from_cookie[$property['ID']]);?>" class="form-control">
             <input type="hidden" name="ID" value="<?php echo ($property['ID']);?>">
@@ -45,7 +47,7 @@
                 <tfoot>
                     <tr>
                           <th colspan="5">Total</th>
-                          <th colspan="2"><?php echo $sum ?></th>
+                          <th colspan="2" id="cartTotal"><?php echo $sum ?></th>
                     </tr>
                       </tfoot>
                     </table>
@@ -58,7 +60,7 @@
                      <a href="cart/?send=" style="margin:0 auto;">
 				              <button class="cart__accept" type="submit">Підтвердити замовлення</button>	
 			              </a>
-                      <button class="btn btn-outline-secondary"><i class="fa fa-refresh"></i> Update cart</button>
+                      <!-- <button class="btn btn-outline-secondary"><i class="fa fa-refresh"></i> Update cart</button> -->
                       <button type="submit" class="btn btn-primary">Proceed to checkout <i class="fa fa-chevron-right"></i></button>
                     </div>
                   </div>
@@ -119,7 +121,7 @@
               </div>
             </div>
             <!-- /.col-lg-9-->
-            <div class="col-lg-3">
+            <div class="col-lg-3 own_hidden">
               <div id="order-summary" class="box">
                 <div class="box-header">
                   <h3 class="mb-0">Order summary</h3>

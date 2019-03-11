@@ -86,8 +86,34 @@
         </div>
       </div>
     </div>
+    <div class="loading-bar"></div>
     <!-- *** COPYRIGHT END ***-->
     <!-- JavaScript files-->
+      <style>
+        .loading-bar{
+          display:none;
+          position:fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url('../public/img/AjaxLoader.gif');
+          background-position: 50% 50%;
+          background-color: rgba(0, 0, 0, 0.5);
+          background-repeat: no-repeat;
+        }
+
+        body.loading{
+          overflow: hidden;
+        }
+
+        body.loading .loading-bar{
+          display: block;
+        }
+
+      </style>
+
     <script src="/public/vendor/jquery/jquery.min.js"></script>
     <script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/public/vendor/jquery.cookie/jquery.cookie.js"> </script>

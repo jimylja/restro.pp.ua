@@ -238,9 +238,6 @@ function user_logout(){
 }
 
 
-
-
-
 function getDishes($db){
     //$sql = "SELECT * FROM dishes";
 	$now = date('Y-m-d');
@@ -248,13 +245,29 @@ function getDishes($db){
 	INNER JOIN categories ON categories.id=dishes.category
 	INNER JOIN kitchens ON kitchens.id=dishes.kitchen
 	INNER JOIN menus ON (menus.menu_date='".$now."' AND FIND_IN_SET(dishes.id, menus.menu_list))";
-    $dishes = mysqli_query($db, $sql);
-    	return $dishes;
+        $dishes = mysqli_query($db, $sql);
+    return $dishes;
 }
 
-function get_all_dishes($db){
-    $sql = "SELECT dishes.id, title FROM dishes";
-	$dishes = mysqli_query($db, $sql);
+
+
+
+
+function get_all_dishes($db, $params=null){
+    $sql = "SELECT * FROM dishes";
+    if ($params!=null){
+        if(isset($params['category'])) {$category_filter='dishes.category='.$params['category'];}
+        if(isset($params['kitchen'])) {$kitchen_filter='dishes.kitchen IN ('.$params['kitchen'].')  ';}    
+        
+     if(isset($category_filter) && isset($kitchen_filter)) {$query=$category_filter.' AND '.$kitchen_filter;}
+     elseif (isset($category_filter)) {
+        $query=$category_filter;
+       }
+    else {$query=$kitchen_filter;}  
+    $sql=$sql.' WHERE '.$query;   
+    }
+    
+    $dishes = mysqli_query($db, $sql);
     return $dishes;
 }
 
@@ -263,14 +276,16 @@ function get_all_dishes($db){
 
 function add_to_cart($id){
 	if (!empty($_COOKIE['cart'])){
-		$cart= unserialize($_COOKIE['cart']);
+        // $cart= unserialize($_COOKIE['cart']);
+        $cart= json_decode($_COOKIE['cart'],true);
 		if (array_key_exists($id, $cart)) {$cart[$id]++;}
 			else {$cart[$id]=1;}
-		setcookie('cart', serialize($cart), time()+60*60*24*1, '/');					
+		setcookie('cart', json_encode($cart), time()+60*60*24*1, '/');					
 			}
 	else{
-		$cart[$id]=1;
-		setcookie('cart', serialize($cart), time()+60*60*24*1, '/');			
+        $cart[$id]=1;
+        setcookie('cart', json_encode($cart), time()+60*60*24*1, '/');			
+		// setcookie('cart', serialize($cart), time()+60*60*24*1, '/');			
 		}			
 }
 
@@ -282,10 +297,11 @@ function cartDelete($db, $id){
             setcookie('cart', null, -1, '/');
             unset($_COOKIE['cart']);}
             else {
-        $cart= unserialize($_COOKIE['cart']);
+        // $cart= unserialize($_COOKIE['cart']);
+        $cart= json_decode($_COOKIE['cart'],true);
         if (array_key_exists($id, $cart)) {
             unset($cart[$id]);
-            if( !empty($cart) ) {setcookie('cart', serialize($cart), time()+60*60*24*1, '/');}
+            if( !empty($cart) ) {setcookie('cart', json_encode($cart), time()+60*60*24*1, '/');}
                 else {    
                     setcookie('cart', null, -1, '/');
                     unset($_COOKIE['cart']);
@@ -304,7 +320,8 @@ function cartDelete($db, $id){
 function get_cart_count(){
 	$count=0;
 	if (!empty($_COOKIE['cart'])){
-		$cart_items= unserialize($_COOKIE['cart']);
+        $cart_items= json_decode($_COOKIE['cart'],true);        
+		// $cart_items= unserialize($_COOKIE['cart']);
 		foreach ($cart_items as $key => $value) {
 			$count+=$value;
 		}
@@ -324,7 +341,8 @@ function fixPrice($price){
 
 
 function getCart($db){
-	$cart= unserialize($_COOKIE['cart']);
+    // $cart= unserialize($_COOKIE['cart']);
+    $cart= json_decode($_COOKIE['cart'],true);
 	$items = array_keys($cart);	//	получити ключі масиву, тобто id товарів
 	$comma_separated = implode(",", $items); //утворюємо рядок значень розділеним комою
 	$sql = 'SELECT * FROM dishes WHERE id IN ('.$comma_separated.')';
@@ -423,6 +441,20 @@ function get_stock_summary($db){
     } 
     while (mysqli_more_results($db) && mysqli_next_result($db));
     return $stock_summary;
+}
+
+
+function get_dish_info($db, $id){
+    $sql = "SELECT title, image, categories.id AS category_id, categories.name AS category, kitchens.name AS kitchen, price FROM dishes
+	INNER JOIN categories ON categories.id=dishes.category
+	INNER JOIN kitchens ON kitchens.id=dishes.kitchen
+	WHERE dishes.ID=".$id;
+    $dishes = mysqli_query($db, $sql);
+    $dish_info=[];
+    foreach ($dishes as $key => $value) {
+        $dish_info[$key]=$value;
+    }
+    return $dish_info;
 }
 
 
