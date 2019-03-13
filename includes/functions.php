@@ -257,7 +257,7 @@ function get_all_dishes($db, $params=null){
     $sql = "SELECT * FROM dishes";
     if ($params!=null){
         if(isset($params['category'])) {$category_filter='dishes.category='.$params['category'];}
-        if(isset($params['kitchen'])) {$kitchen_filter='dishes.kitchen IN ('.$params['kitchen'].')  ';}    
+        if(isset($params['kitchen']) && $params['kitchen']!='') {$kitchen_filter='dishes.kitchen IN ('.$params['kitchen'].')  ';}    
         
      if(isset($category_filter) && isset($kitchen_filter)) {$query=$category_filter.' AND '.$kitchen_filter;}
      elseif (isset($category_filter)) {

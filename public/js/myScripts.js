@@ -24,24 +24,16 @@ window.onload = function(){
 
   let productsBlock=document.querySelector('div.row.products');
   productsBlock.onclick=function(event){
-    event.preventDefault;
-    //event.stopImmediatePropagation();
     const target=event.target;
-    if (target.tagName=='A') {
-       event.stopImmediatePropagation();
-       event.stopPropagation();
-      target.onclick=function(e){
-        e.stopPropagation();
-        e.preventDefault;
-        alert('click');
-      } 
-      
-     
+    if (target.tagName=='A' ) {
+      if(target.className.indexOf('btn btn-primary')!=-1) {
+        event.preventDefault();
+        cartAddClick(event); 
+      }
     }  
   }
 
 function cartAddClick(event){
-  event.preventDefault();
   var e = event.target;
   let str='';
   str=e.toString();
@@ -119,23 +111,33 @@ let cartInputsElements=document.querySelectorAll('td input[type="number"]');
 let kitchens=document.querySelectorAll('#kitchenFilter input[type="checkbox"]');
 let curentCategory=(~document.location.toString().indexOf('?category='))?document.location.toString().substring(document.location.toString().indexOf('=')+1):'undefined';
 let checkedKitchens=new Set();
-console.log('category: '+curentCategory);
+let categoryMessage='all';
 for (let i = 0; i < kitchens.length; i++) {
   kitchens[i].addEventListener('change', function(event){
     if(event.target.checked==true) {checkedKitchens.add(event.target.name);}
       else {checkedKitchens.delete(event.target.name);}
-    //  console.log(checkedKitchens);
-
-     let params={
-      "function": 'getProducts',
-      "kitchen": [...checkedKitchens].toString()
+    let params={
+      "function": 'getProducts'
     }
-    if (curentCategory!='undefined') params["category"]=curentCategory;
+    if(checkedKitchens.size>0){params["kitchen"]=[...checkedKitchens].toString();}
+    if (curentCategory!='undefined') {params["category"]=curentCategory; categoryMessage=curentCategory;}
+    console.log(params, 'category:'+categoryMessage);
     ajax(params);
   })
-  
 }
 
+document.getElementById('clearFilter').onclick=function(){
+  let curentCategory=(~document.location.toString().indexOf('?category='))?document.location.toString().substring(document.location.toString().indexOf('=')+1):'undefined';
+  let params={
+    "function": 'getProducts'
+  }
+  if (curentCategory!='undefined') {params["category"]=curentCategory}
+  let kitchens=document.querySelectorAll('#kitchenFilter input[type="checkbox"]');
+  for (let i = 0; i < kitchens.length; i++) {
+    if(kitchens[i].checked==true) {kitchens[i].checked=false;}
+  }  
+  ajax(params);
+}
 
 }
 
@@ -199,8 +201,7 @@ function ajax(params){
               </div>
             </div>
           </div>`;
-            products.appendChild(div);
-            
+            products.appendChild(div);           
           }
 
         

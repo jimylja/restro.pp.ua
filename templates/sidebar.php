@@ -28,7 +28,7 @@
               </div>
               <div class="card sidebar-menu mb-4">
                 <div class="card-header">
-                  <h3 class="h4 card-title">Brands <a href="#" class="btn btn-sm btn-danger pull-right"><i class="fa fa-times-circle"></i> Clear</a></h3>
+                  <h3 class="h4 card-title">Brands <a href="#" id="clearFilter" class="btn btn-sm btn-danger pull-right"><i class="fa fa-times-circle"></i> Clear</a></h3>
                 </div>
                 <div class="card-body">
                   <form>
@@ -48,7 +48,7 @@
                         ';
                       }}?>
                     </div>
-                    <button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>
+                    <!-- <button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button> -->
                   </form>
                 </div>
               </div>
