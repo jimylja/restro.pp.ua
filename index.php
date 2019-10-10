@@ -257,6 +257,5 @@ if(!isset($_SESSION['products_names_list'])){
 		if(empty($page)){$tpl='main';}
 			else {$tpl='404';}
 			}
-//виклик шаблонізатора
 include_once(ROOT.'/templates/index.php');
 ?>
